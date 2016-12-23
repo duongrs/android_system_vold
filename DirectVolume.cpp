@@ -264,7 +264,11 @@ void DirectVolume::handlePartitionAdded(const char *devpath, NetlinkEvent *evt) 
 #endif
         if (getState() != Volume::State_Formatting) {
             setState(Volume::State_Idle);
+#ifdef PATCH_FOR_SLSIAP
+            if (mRetryMount == true || !strncmp(getLabel(), "usbdisk", 7)) {
+#else
             if (mRetryMount == true) {
+#endif
                 mRetryMount = false;
                 mountVol();
             }
